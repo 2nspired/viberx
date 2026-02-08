@@ -1,26 +1,344 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
+
+/* ============================================
+   VIBERX DESIGN SYSTEM
+   ============================================
+   Brand: Industrial minimalism / retro-future hardware / medical Rx
+   - Squared geometry, sharp corners
+   - 80-90% neutral palette, accent colors as signals only
+   - No decorative motion, no gradients/glow
+   - Color-coded audio metrics (functional use only)
+   ============================================ */
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+	/* Base Colors */
+	--color-background: var(--background);
+	--color-foreground: var(--foreground);
+
+	/* Typography */
+	--font-sans: var(--font-geist-sans);
+	--font-mono: var(--font-geist-mono);
+
+	/* Component Colors */
+	--color-card: var(--card);
+	--color-card-foreground: var(--card-foreground);
+	--color-popover: var(--popover);
+	--color-popover-foreground: var(--popover-foreground);
+	--color-primary: var(--primary);
+	--color-primary-foreground: var(--primary-foreground);
+	--color-secondary: var(--secondary);
+	--color-secondary-foreground: var(--secondary-foreground);
+	--color-muted: var(--muted);
+	--color-muted-foreground: var(--muted-foreground);
+	--color-accent: var(--accent);
+	--color-accent-foreground: var(--accent-foreground);
+	--color-destructive: var(--destructive);
+	--color-border: var(--border);
+	--color-input: var(--input);
+	--color-ring: var(--ring);
+
+	/* VibeRX Brand Colors */
+	--color-vibe-purple: var(--vibe-purple);
+	--color-vibe-cyan: var(--vibe-cyan);
+	--color-vibe-pink: var(--vibe-pink);
+	--color-vibe-lime: var(--vibe-lime);
+	--color-vibe-orange: var(--vibe-orange);
+
+	/* Energy Level Colors (for BPM/Energy indicators) */
+	--color-energy-low: var(--energy-low);
+	--color-energy-medium: var(--energy-medium);
+	--color-energy-high: var(--energy-high);
+
+	/* Key Colors (for Camelot wheel) */
+	--color-key-compatible: var(--key-compatible);
+	--color-key-neutral: var(--key-neutral);
+	--color-key-clash: var(--key-clash);
+
+	/* Chart Colors */
+	--color-chart-1: var(--chart-1);
+	--color-chart-2: var(--chart-2);
+	--color-chart-3: var(--chart-3);
+	--color-chart-4: var(--chart-4);
+	--color-chart-5: var(--chart-5);
+
+	/* Sidebar */
+	--color-sidebar: var(--sidebar);
+	--color-sidebar-foreground: var(--sidebar-foreground);
+	--color-sidebar-primary: var(--sidebar-primary);
+	--color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+	--color-sidebar-accent: var(--sidebar-accent);
+	--color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+	--color-sidebar-border: var(--sidebar-border);
+	--color-sidebar-ring: var(--sidebar-ring);
+
+	/* Border Radius — squared geometry */
+	--radius-sm: calc(var(--radius) - 4px);
+	--radius-md: calc(var(--radius) - 2px);
+	--radius-lg: var(--radius);
+	--radius-xl: calc(var(--radius) + 4px);
+	--radius-2xl: calc(var(--radius) + 8px);
+	--radius-3xl: calc(var(--radius) + 12px);
+	--radius-4xl: calc(var(--radius) + 16px);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ============================================
+   LIGHT MODE
+   ============================================ */
+:root {
+	--radius: 0.125rem;
+
+	/* Base */
+	--background: oklch(0.98 0 0);
+	--foreground: oklch(0.145 0 0);
+
+	/* Cards - Slightly elevated */
+	--card: oklch(1 0 0);
+	--card-foreground: oklch(0.145 0 0);
+
+	/* Popover */
+	--popover: oklch(1 0 0);
+	--popover-foreground: oklch(0.145 0 0);
+
+	/* Primary - VibeRX Purple */
+	--primary: oklch(0.55 0.25 285);
+	--primary-foreground: oklch(0.98 0 0);
+
+	/* Secondary */
+	--secondary: oklch(0.95 0 0);
+	--secondary-foreground: oklch(0.2 0 0);
+
+	/* Muted */
+	--muted: oklch(0.95 0 0);
+	--muted-foreground: oklch(0.5 0 0);
+
+	/* Accent - Cyan */
+	--accent: oklch(0.75 0.15 195);
+	--accent-foreground: oklch(0.15 0 0);
+
+	/* Destructive */
+	--destructive: oklch(0.55 0.22 25);
+
+	/* Borders & Input */
+	--border: oklch(0.9 0 0);
+	--input: oklch(0.9 0 0);
+	--ring: oklch(0.55 0.25 285);
+
+	/* VibeRX Brand Colors */
+	--vibe-purple: oklch(0.55 0.25 285);
+	--vibe-cyan: oklch(0.75 0.15 195);
+	--vibe-pink: oklch(0.7 0.2 350);
+	--vibe-lime: oklch(0.8 0.2 130);
+	--vibe-orange: oklch(0.75 0.18 55);
+
+	/* Energy Indicators */
+	--energy-low: oklch(0.7 0.15 195);
+	--energy-medium: oklch(0.75 0.18 85);
+	--energy-high: oklch(0.65 0.22 25);
+
+	/* Key Compatibility */
+	--key-compatible: oklch(0.7 0.18 145);
+	--key-neutral: oklch(0.75 0.18 85);
+	--key-clash: oklch(0.65 0.22 25);
+
+	/* Charts */
+	--chart-1: oklch(0.55 0.25 285);
+	--chart-2: oklch(0.75 0.15 195);
+	--chart-3: oklch(0.7 0.2 350);
+	--chart-4: oklch(0.8 0.2 130);
+	--chart-5: oklch(0.75 0.18 55);
+
+	/* Sidebar */
+	--sidebar: oklch(0.98 0 0);
+	--sidebar-foreground: oklch(0.145 0 0);
+	--sidebar-primary: oklch(0.55 0.25 285);
+	--sidebar-primary-foreground: oklch(0.98 0 0);
+	--sidebar-accent: oklch(0.95 0 0);
+	--sidebar-accent-foreground: oklch(0.2 0 0);
+	--sidebar-border: oklch(0.9 0 0);
+	--sidebar-ring: oklch(0.55 0.25 285);
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ============================================
+   DARK MODE (Primary theme for VibeRX)
+   ============================================ */
+.dark {
+	/* Base - Deep dark background (pure neutral) */
+	--background: oklch(0.12 0 0);
+	--foreground: oklch(0.95 0 0);
+
+	/* Cards - Elevated surfaces (pure neutral) */
+	--card: oklch(0.18 0 0);
+	--card-foreground: oklch(0.95 0 0);
+
+	/* Popover */
+	--popover: oklch(0.18 0 0);
+	--popover-foreground: oklch(0.95 0 0);
+
+	/* Primary - Vibrant Purple */
+	--primary: oklch(0.7 0.25 285);
+	--primary-foreground: oklch(0.12 0 0);
+
+	/* Secondary */
+	--secondary: oklch(0.25 0 0);
+	--secondary-foreground: oklch(0.95 0 0);
+
+	/* Muted */
+	--muted: oklch(0.25 0 0);
+	--muted-foreground: oklch(0.65 0 0);
+
+	/* Accent - Electric Cyan */
+	--accent: oklch(0.8 0.15 195);
+	--accent-foreground: oklch(0.12 0 0);
+
+	/* Destructive */
+	--destructive: oklch(0.65 0.22 25);
+
+	/* Borders & Input (pure neutral) */
+	--border: oklch(0.3 0 0);
+	--input: oklch(0.25 0 0);
+	--ring: oklch(0.7 0.25 285);
+
+	/* VibeRX Brand Colors - Brighter for dark mode */
+	--vibe-purple: oklch(0.7 0.25 285);
+	--vibe-cyan: oklch(0.8 0.15 195);
+	--vibe-pink: oklch(0.75 0.22 350);
+	--vibe-lime: oklch(0.85 0.22 130);
+	--vibe-orange: oklch(0.8 0.2 55);
+
+	/* Energy Indicators - Vivid for dark backgrounds */
+	--energy-low: oklch(0.75 0.15 195);
+	--energy-medium: oklch(0.8 0.2 85);
+	--energy-high: oklch(0.7 0.25 25);
+
+	/* Key Compatibility */
+	--key-compatible: oklch(0.75 0.2 145);
+	--key-neutral: oklch(0.8 0.2 85);
+	--key-clash: oklch(0.7 0.25 25);
+
+	/* Charts - Vibrant palette */
+	--chart-1: oklch(0.7 0.25 285);
+	--chart-2: oklch(0.8 0.15 195);
+	--chart-3: oklch(0.75 0.22 350);
+	--chart-4: oklch(0.85 0.22 130);
+	--chart-5: oklch(0.8 0.2 55);
+
+	/* Sidebar (pure neutral) */
+	--sidebar: oklch(0.15 0 0);
+	--sidebar-foreground: oklch(0.95 0 0);
+	--sidebar-primary: oklch(0.7 0.25 285);
+	--sidebar-primary-foreground: oklch(0.12 0 0);
+	--sidebar-accent: oklch(0.25 0 0);
+	--sidebar-accent-foreground: oklch(0.95 0 0);
+	--sidebar-border: oklch(0.3 0 0);
+	--sidebar-ring: oklch(0.7 0.25 285);
+}
+
+/* ============================================
+   BASE STYLES
+   ============================================ */
+@layer base {
+	* {
+		@apply border-border outline-ring/50;
+	}
+
+	body {
+		@apply bg-background text-foreground antialiased;
+		font-feature-settings:
+			"rlig" 1,
+			"calt" 1;
+	}
+
+	/* Smooth scrolling */
+	html {
+		scroll-behavior: smooth;
+	}
+
+	/* Focus visible for accessibility */
+	:focus-visible {
+		@apply outline-2 outline-offset-2 outline-ring;
+	}
+
+	/* Selection color */
+	::selection {
+		@apply bg-primary/20 text-foreground;
+	}
+}
+
+/* ============================================
+   VIBERX UTILITY CLASSES
+   ============================================ */
+@layer utilities {
+	/* Prescription Label Card Style */
+	.rx-card {
+		@apply relative rounded-sm border-2 border-border bg-card p-4;
+		@apply before:absolute before:left-0 before:top-0 before:h-1 before:w-full before:rounded-t-sm before:bg-primary;
+	}
+
+	/* Energy Level Badges */
+	.energy-low {
+		@apply bg-energy-low/20 text-energy-low border-energy-low;
+	}
+
+	.energy-medium {
+		@apply bg-energy-medium/20 text-energy-medium border-energy-medium;
+	}
+
+	.energy-high {
+		@apply bg-energy-high/20 text-energy-high border-energy-high;
+	}
+
+	/* Touch Target - Minimum 44x44px for accessibility */
+	.touch-target {
+		@apply min-h-[44px] min-w-[44px];
+	}
+
+	/* Hide scrollbar but allow scrolling */
+	.scrollbar-hide {
+		-ms-overflow-style: none;
+		scrollbar-width: none;
+	}
+
+	.scrollbar-hide::-webkit-scrollbar {
+		display: none;
+	}
+
+	/* Prescription Label Typography */
+	.rx-label {
+		@apply font-mono text-xs uppercase tracking-wider text-muted-foreground;
+	}
+
+	.rx-value {
+		@apply font-sans text-lg font-semibold;
+	}
+
+	.rx-title {
+		@apply font-sans text-xl font-bold tracking-tight;
+	}
+
+	/* BPM Display */
+	.bpm-display {
+		@apply font-mono text-2xl font-bold tabular-nums;
+	}
+
+	/* Dosage Bar (Progress) */
+	.dosage-bar {
+		@apply h-2 overflow-hidden rounded-sm bg-muted;
+	}
+
+	.dosage-fill {
+		@apply h-full rounded-sm transition-all duration-500;
+	}
+
+	/* Card Variants */
+	.card-elevated {
+		@apply shadow-lg shadow-black/5 dark:shadow-black/20;
+	}
+
+	.card-interactive {
+		@apply cursor-pointer transition-colors duration-200;
+		@apply hover:border-primary/50;
+	}
 }

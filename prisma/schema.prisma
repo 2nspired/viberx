@@ -1,0 +1,208 @@
+// ============================================
+// VibeRX Prisma Schema
+// ============================================
+// This schema defines the database structure for VibeRX.
+//
+// Models:
+// - User: Spotify user data and authentication
+// - OptimizedPlaylist: History of playlist optimizations
+// - CachedAudioFeatures: Cached Spotify audio analysis data
+// - UserPreferences: User settings and optimization presets
+//
+// @see https://pris.ly/d/prisma-schema
+// ============================================
+
+generator client {
+  provider = "prisma-client-js"
+  // Output to default location for better compatibility
+  // The client will be at node_modules/.prisma/client
+}
+
+// Database connection is configured in prisma.config.ts (Prisma 7+)
+datasource db {
+  provider = "postgresql"
+}
+
+// ============================================
+// USER MODEL
+// ============================================
+// Stores Spotify user information after OAuth login.
+// The id is the Spotify user ID (string), which serves as the primary key.
+//
+// Why use Spotify ID as primary key?
+// - Unique across all Spotify users
+// - Stable (doesn't change)
+// - Allows direct lookups without joins
+// ============================================
+model User {
+  // Primary key: Spotify's unique user ID (e.g., "spotify_user_123")
+  id           String   @id
+
+  // Spotify profile data (synced on each login)
+  spotifyId    String   @unique  // Same as id, kept for explicit clarity
+  displayName  String?           // User's display name (can be null)
+  email        String?           // Email if provided by Spotify
+  profileImage String?           // URL to profile picture
+
+  // Spotify subscription info (useful for future features)
+  country      String?           // User's country code (e.g., "US")
+  product      String?           // Subscription type: "free", "premium", etc.
+
+  // Timestamps
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  lastLoginAt  DateTime @default(now())
+
+  // Relations
+  optimizedPlaylists OptimizedPlaylist[]
+  preferences        UserPreferences?
+
+  // Indexes for common queries
+  @@index([email])
+  @@index([lastLoginAt])
+
+  @@map("users") // Table name in database
+}
+
+// ============================================
+// OPTIMIZED PLAYLIST MODEL
+// ============================================
+// Tracks every playlist optimization performed by users.
+// Stores the settings used and links to both original and new playlists.
+//
+// This allows users to:
+// - View their optimization history
+// - Re-optimize with different settings
+// - Track which playlists they've optimized
+// ============================================
+model OptimizedPlaylist {
+  // Auto-incrementing ID
+  id                    Int      @id @default(autoincrement())
+
+  // User who created this optimization
+  userId                String
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Playlist references
+  originalPlaylistId    String   // Spotify ID of the source playlist
+  originalPlaylistName  String   // Name at time of optimization (may change on Spotify)
+  spotifyPlaylistId     String?  // Spotify ID of the created playlist (null if not saved)
+  playlistName          String   // Name of the optimized playlist
+
+  // Optimization details
+  trackCount            Int      // Number of tracks in the playlist
+
+  // Settings used for optimization (stored as JSON)
+  // Example: { "mode": "auto", "bpmWeight": 50, "keyWeight": 30, "energyWeight": 20 }
+  optimizationSettings  Json
+
+  // Optimization mode used
+  // "auto" | "manual" | "energetic_build" | "chill_vibes" | "balanced_mix"
+  optimizationMode      String   @default("auto")
+
+  // Timestamps
+  createdAt             DateTime @default(now())
+
+  // Indexes for efficient queries
+  @@index([userId])                    // Find all optimizations by user
+  @@index([originalPlaylistId])        // Find optimizations of a specific playlist
+  @@index([createdAt])                 // Sort by date
+  @@index([userId, createdAt])         // User's history sorted by date
+
+  @@map("optimized_playlists")
+}
+
+// ============================================
+// CACHED AUDIO FEATURES MODEL
+// ============================================
+// Caches Spotify's audio features for tracks to minimize API calls.
+// Spotify's Audio Features API has rate limits, so caching is essential.
+//
+// Audio features include:
+// - BPM (tempo): Beats per minute
+// - Key: Musical key (0-11, where 0=C, 1=C#, etc.)
+// - Energy: Intensity and activity (0.0-1.0)
+// - Valence: Musical positiveness (0.0-1.0)
+// - Danceability: How suitable for dancing (0.0-1.0)
+//
+// Cache strategy:
+// - Check cache before calling Spotify API
+// - Cache has no expiration (audio features don't change)
+// - Batch fetch missing tracks (up to 100 per API call)
+// ============================================
+model CachedAudioFeatures {
+  // Auto-incrementing ID
+  id              Int      @id @default(autoincrement())
+
+  // Spotify track identifier (unique)
+  spotifyTrackId  String   @unique
+
+  // Track metadata (for display without additional API calls)
+  trackName       String
+  artistName      String
+  albumName       String?
+  durationMs      Int      // Track duration in milliseconds
+
+  // Audio features from Spotify API
+  // All values are nullable because some tracks don't have audio features
+  // (e.g., podcasts, local files, very new releases)
+  tempo           Float?   // BPM (beats per minute), typically 60-200
+  key             Int?     // Musical key: 0=C, 1=C#, 2=D, ..., 11=B
+  mode            Int?     // Modality: 0=minor, 1=major
+  energy          Float?   // Energy level: 0.0 (low) to 1.0 (high)
+  valence         Float?   // Musical positiveness: 0.0 (sad) to 1.0 (happy)
+  danceability    Float?   // Danceability: 0.0 (low) to 1.0 (high)
+  acousticness    Float?   // Acoustic confidence: 0.0 to 1.0
+  instrumentalness Float?  // Instrumental probability: 0.0 to 1.0
+  liveness        Float?   // Live performance probability: 0.0 to 1.0
+  speechiness     Float?   // Spoken word presence: 0.0 to 1.0
+  loudness        Float?   // Overall loudness in dB (typically -60 to 0)
+  timeSignature   Int?     // Time signature (3-7, representing 3/4 to 7/4)
+
+  // Cache metadata
+  cachedAt        DateTime @default(now())
+
+  // Index on spotifyTrackId is automatic due to @unique
+  // Additional index for cleanup queries if needed
+  @@index([cachedAt])
+
+  @@map("cached_audio_features")
+}
+
+// ============================================
+// USER PREFERENCES MODEL
+// ============================================
+// Stores user-specific settings and optimization presets.
+// One-to-one relationship with User (each user has one preferences record).
+//
+// This allows users to:
+// - Save their preferred optimization mode
+// - Store custom weight configurations
+// - Configure UI preferences
+// ============================================
+model UserPreferences {
+  // Auto-incrementing ID
+  id                      Int      @id @default(autoincrement())
+
+  // One-to-one relation with User
+  userId                  String   @unique
+  user                    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Default optimization settings
+  // "auto" | "manual" | "energetic_build" | "chill_vibes" | "balanced_mix"
+  defaultOptimizationMode String   @default("auto")
+
+  // Custom weight presets (stored as JSON)
+  // Example: { "bpmWeight": 40, "keyWeight": 35, "energyWeight": 25 }
+  preferredWeights        Json?
+
+  // UI preferences
+  theme                   String   @default("dark")  // "light" | "dark" | "system"
+  compactView             Boolean  @default(false)   // Compact playlist view
+
+  // Timestamps
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+
+  @@map("user_preferences")
+}

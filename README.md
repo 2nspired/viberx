@@ -1,5 +1,33 @@
 # VibeRX - Spotify Playlist Optimizer
 
+> **PROJECT STATUS: PAUSED / DISCONTINUED (February 2026)**
+>
+> VibeRX was designed to optimize Spotify playlists like a professional DJ set using BPM, key, and energy analysis from Spotify's Audio Features API. Development reached a working state — Spotify OAuth PKCE authentication, playlist reading, database integration, design system, and Vercel deployment were all complete and functional.
+>
+> However, Spotify's November 2024 API restrictions (enforced for new apps) block access to the Audio Features and Audio Analysis endpoints, which were the core data source for the entire optimization concept. This was confirmed on 2026-02-11 when the Audio Features endpoint returned 403 Forbidden in dev mode. MusicBrainz was evaluated as an alternative but only provides metadata (artist, album, release) — not audio features like BPM, key, or energy. No viable free alternative data source exists.
+>
+> Combined with Spotify's February 2026 platform changes (dev mode limited to 5 users, extended quota applications restricted), the path to building and shipping this app as originally designed is no longer feasible.
+>
+> **What was built and works:**
+> - Spotify OAuth PKCE authentication (login, callback, refresh, logout)
+> - Playlist reading via the Spotify Web API
+> - Prisma 7 + Supabase PostgreSQL database
+> - tRPC v11 API layer with protected procedures
+> - Cookie-based session management (httpOnly, no localStorage)
+> - shadcn/ui design system with custom VibeRX branding
+> - Next.js 16 proxy-based route protection
+> - Vercel deployment with environment validation
+>
+> **What was blocked:**
+> - `GET /audio-features/{id}` — 403 Forbidden (restricted for new apps since Nov 2024)
+> - `GET /audio-analysis/{id}` — same restriction
+> - Recommendations endpoint — same restriction
+> - 30-second preview URLs — same restriction
+>
+> See `docs/decisions.md` for the full decision log and `docs/progress.md` for checkpoint details. This codebase remains a useful reference for Next.js 16 + Spotify OAuth + tRPC + Prisma 7 patterns.
+
+---
+
 **Your prescription for the perfect playlist.** VibeRX optimizes Spotify playlists like a professional DJ using BPM, key, and energy analysis.
 
 ## Tech Stack
@@ -191,15 +219,15 @@ npm run lint:fix
 ## Checkpoint Progress
 
 - [x] Checkpoint 1: Project Setup & Architecture
-- [ ] Checkpoint 1.5: Database Setup (Supabase + Prisma)
-- [ ] Checkpoint 2: Design System & Branding
-- [ ] Checkpoint 3: Spotify Authentication
-- [ ] Checkpoint 4: Fetch & Display Playlists
-- [ ] Checkpoint 5: Playlist Analysis
-- [ ] Checkpoint 6: Algorithmic Optimization Engine
-- [ ] Checkpoint 7: Manual Tweaking & Playlist Creation
-- [ ] Checkpoint 8: Dashboard & History
-- [ ] Checkpoint 9: Polish & Deployment
+- [x] Checkpoint 1.5: Database Setup (Supabase + Prisma)
+- [x] Checkpoint 2: Design System & Branding
+- [x] Checkpoint 3: Spotify Authentication
+- [ ] ~~Checkpoint 4: Fetch & Display Playlists~~ (project paused)
+- [ ] ~~Checkpoint 5: Playlist Analysis~~ (blocked — audio features API restricted)
+- [ ] ~~Checkpoint 6: Algorithmic Optimization Engine~~
+- [ ] ~~Checkpoint 7: Manual Tweaking & Playlist Creation~~
+- [ ] ~~Checkpoint 8: Dashboard & History~~
+- [ ] ~~Checkpoint 9: Polish & Deployment~~
 
 ## Troubleshooting
 

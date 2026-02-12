@@ -4,10 +4,10 @@ Tracks architectural decisions, external platform changes, and their impact on t
 
 ---
 
-## DEC-004: Spotify Audio Features Access Risk
+## DEC-004: Spotify Audio Features Access — BLOCKED
 
 **Date:** 2026-02-11
-**Status:** RISK — needs testing
+**Status:** CONFIRMED BLOCKED — requires alternative data source
 
 **Context:**
 In November 2024, Spotify announced that new Web API apps can no longer access:
@@ -16,24 +16,21 @@ In November 2024, Spotify announced that new Web API apps can no longer access:
 - Recommendations
 - 30-second preview URLs
 
-Audio features (BPM, key, energy, danceability) are the core of VibeRX's playlist optimization. Without them, the app can't analyze tracks for DJ-style reordering.
+Audio features (BPM, key, energy, danceability) are the core of VibeRX's playlist optimization.
 
-**What we know:**
-- The endpoints still technically exist in the API
-- Existing apps with extended quota access are unaffected
-- It's unclear whether dev mode apps can still access these for the developer's own data
-- Extended quota approval is very competitive (~5% acceptance rate per Spotify's April 2025 post)
+**Test result (2026-02-11):**
+- `GET /audio-features/{id}` returns **403 Forbidden** in dev mode
+- `GET /me/playlists` returns **200 OK** — playlist access works fine
+- Confirmed: new apps cannot access audio features regardless of dev mode
 
-**Decision:**
-Continue building as planned. Test audio features access as soon as OAuth is working with the new Spotify app. Do not redesign prematurely.
+**Options for alternative audio data:**
+1. **Apply for extended quota** — build a complete demo with placeholder data, submit to Spotify review. Low approval odds (~5%) but worth trying.
+2. **Third-party music data APIs** — services like GetSongBPM, Cyanite.ai, or ACRCloud provide BPM/key/energy data. Would add a dependency and possibly cost.
+3. **MusicBrainz** — free, open database with some BPM/key metadata. Variable coverage but no cost.
+4. **Manual tagging by users** — let users input BPM/key/energy. Functional but removes the "magic" of automatic analysis.
+5. **Hybrid approach** — pull from third-party APIs where available, allow manual overrides for gaps.
 
-**Fallback options if blocked:**
-1. Apply for extended quota with a working demo (auth + playlist UI + optimization algorithm ready, just needs data source)
-2. Use MusicBrainz as an alternative BPM/key data source (free, open, but variable coverage)
-3. Allow users to manually tag track attributes (functional but less magical)
-4. Hybrid approach: pull from MusicBrainz where available, allow manual overrides for gaps
-
-**Impact:** Potentially high — could require rethinking the core feature. Testing priority is critical.
+**Decision:** PENDING — need to evaluate alternative data sources before choosing a path.
 
 **References:**
 - https://developer.spotify.com/blog/2024-11-27-changes-to-the-web-api

@@ -16,7 +16,6 @@ import "./src/env";
  * - Environment variable validation
  *
  * Note: PWA service worker will be added in Checkpoint 9
- * using a more modern approach than next-pwa
  */
 const nextConfig: NextConfig = {
 	/**

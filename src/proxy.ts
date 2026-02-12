@@ -1,13 +1,12 @@
 /**
- * Next.js Middleware
+ * Next.js Proxy (Route Protection)
  *
  * Runs before every request to handle route protection:
  * - Protected routes (/dashboard, etc.) redirect to /login if not authenticated
  * - Auth routes (/login) redirect to /dashboard if already authenticated
  * - Public routes (/, /api/auth, etc.) pass through unchanged
  *
- * Note: Middleware runs on the Edge Runtime, so it can only read cookies
- * (no Node.js APIs, no database access). Actual token validation happens
+ * Note: Proxy runs on the Node.js runtime. Actual token validation happens
  * in the route handlers and tRPC context.
  *
  * We check for BOTH access_token and refresh_token cookies because:
@@ -22,10 +21,10 @@ import { type NextRequest, NextResponse } from "next/server";
 const PROTECTED_ROUTES = ["/dashboard"];
 const AUTH_ROUTES = ["/login"];
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
 	const { pathname } = request.nextUrl;
 
-	// Skip middleware for routes that should always be accessible
+	// Skip proxy for routes that should always be accessible
 	if (
 		pathname.startsWith("/_next") ||
 		pathname.startsWith("/api/auth") ||

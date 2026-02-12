@@ -8,7 +8,7 @@
  */
 
 import "dotenv/config";
-import { defineConfig, env } from "prisma/config";
+import { defineConfig } from "prisma/config";
 
 export default defineConfig({
 	// Schema file location
@@ -23,9 +23,9 @@ export default defineConfig({
 	},
 
 	// Database connection
-	// Use DIRECT_URL for migrations/push (bypasses PgBouncer)
-	// PgBouncer doesn't support all operations needed for schema changes
+	// Prefer DIRECT_URL for migrations/push (bypasses PgBouncer)
+	// Fall back to DATABASE_URL for environments where DIRECT_URL isn't set (e.g. Vercel builds)
 	datasource: {
-		url: env("DIRECT_URL"),
+		url: process.env.DIRECT_URL ?? process.env.DATABASE_URL ?? "",
 	},
 });

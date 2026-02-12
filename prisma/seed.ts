@@ -32,10 +32,7 @@ async function main() {
 			id: "sample_user_123",
 			spotifyId: "sample_user_123",
 			displayName: "DJ Sample",
-			email: "sample@example.com",
 			profileImage: "https://i.scdn.co/image/sample",
-			country: "US",
-			product: "premium",
 		},
 	});
 	console.log(`   Created user: ${user.displayName} (${user.id})`);

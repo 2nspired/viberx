@@ -24,16 +24,16 @@ import { generatePKCE, generateRandomString, setOAuthCookies } from "@/lib/auth"
  * - playlist-read-collaborative: Include collaborative playlists
  * - playlist-modify-public: Create/edit public playlists
  * - playlist-modify-private: Create/edit private playlists
- * - user-read-email: Read user's email address
- * - user-read-private: Read user's subscription level and country
+ *
+ * Note: user-read-email and user-read-private scopes removed —
+ * email, country, and product fields were dropped from the /me
+ * response in Spotify's February 2026 API changes.
  */
 const SPOTIFY_SCOPES = [
 	"playlist-read-private",
 	"playlist-read-collaborative",
 	"playlist-modify-public",
 	"playlist-modify-private",
-	"user-read-email",
-	"user-read-private",
 ].join(" ");
 
 export async function GET(): Promise<NextResponse> {

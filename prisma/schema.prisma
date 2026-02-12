@@ -41,12 +41,10 @@ model User {
   // Spotify profile data (synced on each login)
   spotifyId    String   @unique  // Same as id, kept for explicit clarity
   displayName  String?           // User's display name (can be null)
-  email        String?           // Email if provided by Spotify
   profileImage String?           // URL to profile picture
 
-  // Spotify subscription info (useful for future features)
-  country      String?           // User's country code (e.g., "US")
-  product      String?           // Subscription type: "free", "premium", etc.
+  // Note: email, country, product were removed from Spotify's /me response
+  // in the February 2026 API changes
 
   // Timestamps
   createdAt    DateTime @default(now())
@@ -58,7 +56,6 @@ model User {
   preferences        UserPreferences?
 
   // Indexes for common queries
-  @@index([email])
   @@index([lastLoginAt])
 
   @@map("users") // Table name in database

@@ -104,20 +104,14 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 			where: { id: profile.id },
 			update: {
 				displayName: profile.display_name,
-				email: profile.email,
 				profileImage: profile.images?.[0]?.url ?? null,
-				country: profile.country,
-				product: profile.product,
 				lastLoginAt: new Date(),
 			},
 			create: {
 				id: profile.id,
 				spotifyId: profile.id,
 				displayName: profile.display_name,
-				email: profile.email,
 				profileImage: profile.images?.[0]?.url ?? null,
-				country: profile.country,
-				product: profile.product,
 			},
 		});
 	} catch (err) {
@@ -129,9 +123,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 	const sessionUser: SessionUser = {
 		id: profile.id,
 		displayName: profile.display_name,
-		email: profile.email,
 		profileImage: profile.images?.[0]?.url ?? null,
-		product: profile.product,
 	};
 
 	await setAuthCookies({

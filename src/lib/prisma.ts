@@ -11,8 +11,8 @@
  *   const users = await prisma.user.findMany()
  */
 
-import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
+import { PrismaClient } from "@prisma/client";
 
 // The Prisma Client is generated at node_modules/.prisma/client
 // Run `npm run db:generate` after schema changes to regenerate

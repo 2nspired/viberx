@@ -13,9 +13,7 @@
 export interface SessionUser {
 	id: string;
 	displayName: string | null;
-	email: string | null;
 	profileImage: string | null;
-	product: string | null; // "free" | "premium" | "open" etc.
 }
 
 /**
@@ -44,14 +42,12 @@ export interface SpotifyTokenResponse {
 
 /**
  * Spotify user profile from /v1/me endpoint.
+ * Note: email, country, product fields were removed in Feb 2026 API changes.
  *
  * @see https://developer.spotify.com/documentation/web-api/reference/get-current-users-profile
  */
 export interface SpotifyUserProfile {
 	id: string;
 	display_name: string | null;
-	email: string;
 	images: Array<{ url: string; height: number | null; width: number | null }>;
-	country: string;
-	product: string;
 }

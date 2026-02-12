@@ -16,8 +16,7 @@ import { Music } from "lucide-react";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import { LogoutButton } from "@/components/auth/logout-button";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getSession } from "@/lib/auth";
 
 export default async function DashboardPage() {
@@ -61,12 +60,6 @@ export default async function DashboardPage() {
 								<CardTitle className="text-xl">
 									Welcome, {user.displayName ?? "Music Lover"}
 								</CardTitle>
-								<CardDescription>{user.email}</CardDescription>
-								{user.product && (
-									<Badge variant="secondary" className="mt-1 capitalize">
-										Spotify {user.product}
-									</Badge>
-								)}
 							</div>
 						</div>
 					</CardHeader>
